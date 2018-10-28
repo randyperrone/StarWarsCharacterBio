@@ -3,13 +3,19 @@ package com.example.randyperrone.starwarscharacterbio;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.randyperrone.starwarscharacterbio.Model.CharacterData;
+import com.example.randyperrone.starwarscharacterbio.Model.CharacterDataService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,9 +28,16 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class CharacterListFragment extends Fragment {
+    private static final String TAG = "CharacterListFragment";
     private View layoutView;
     private List<CharacterData> characterDataList;
+    private RecyclerView recyclerView;
+    private CharacterListAdapter mAdapter;
+    private CharacterDataService downloadCharacterDataService;
+    private EndlessRecyclerViewScrollListener scrollListener;
+    GridLayoutManager gridLayoutManager;
 
+    private final String BASE_URL = "https://swapi.co/api/people/?page=";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -58,6 +71,7 @@ public class CharacterListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        loadData();
     }
 
     @Override
@@ -66,10 +80,49 @@ public class CharacterListFragment extends Fragment {
         // Inflate the layout for this fragment
         layoutView = inflater.inflate(R.layout.fragment_character_list, container, false);
 
+        characterDataList = new ArrayList<>();
+        recyclerView = (RecyclerView)layoutView.findViewById(R.id.character_list_recyclerview);
+        mAdapter = new CharacterListAdapter(characterDataList);
+        recyclerView.setAdapter(mAdapter);
+        int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
+        gridLayoutManager = new GridLayoutManager(getActivity(), gridColumnCount);
+        recyclerView.setLayoutManager(gridLayoutManager);
 
+        scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                String URL = buildURL(Integer.toString(page));
+                downloadCharacterDataService.downloadCharacterData(URL, new CharacterDataService.VolleyCallBack() {
+                    @Override
+                    public void onSuccess(List<CharacterData> characterList, Boolean flagForLastAPIPage) {
+                        Log.i(TAG, "downloadData onSuccess");
+                        characterDataList.addAll(characterList);
+                        final int curSize = mAdapter.getItemCount();
+                        mAdapter.notifyItemRangeInserted(curSize, characterDataList.size() - 1);
+                        if(flagForLastAPIPage){
+                            scrollListener.resetState();
+                        }
+                    }
+                });
+            }
+        };
 
 
         return layoutView;
+    }
+
+    private void loadData(){
+        downloadCharacterDataService = new CharacterDataService(getActivity().getApplicationContext());
+        String URL = buildURL("1");
+        downloadCharacterDataService.downloadCharacterData(URL, new CharacterDataService.VolleyCallBack() {
+            @Override
+            public void onSuccess(List<CharacterData> characterList, Boolean flagForLastAPIPage) {
+                Log.i(TAG, "downloadData onSuccess");
+                characterDataList.addAll(characterList);
+                final int curSize = mAdapter.getItemCount();
+                mAdapter.notifyItemRangeInserted(curSize, characterDataList.size() - 1);
+            }
+        });
     }
 
     @Override
@@ -87,6 +140,10 @@ public class CharacterListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private String buildURL(String pageNum){
+        return BASE_URL + pageNum;
     }
 
     /**

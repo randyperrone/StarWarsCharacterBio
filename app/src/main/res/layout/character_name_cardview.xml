@@ -9,6 +9,7 @@
         android:id="@+id/character_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,8 +30,8 @@
                 android:src="@drawable/starwarslogo" />
 
             <TextView
-                style="@style/title"
                 android:id="@+id/character_cardview_name"
+                style="@style/title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
