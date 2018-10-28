@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.randyperrone.starwarscharacterbio.Model.CharacterData;
 
@@ -22,6 +23,7 @@ import com.example.randyperrone.starwarscharacterbio.Model.CharacterData;
 public class CharacterDataFragment extends Fragment {
     private View layoutView;
     private CharacterData characterData;
+    private TextView name, gender, height, mass, birthYear, eyeColor, hairColor, skinColor;
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -61,12 +63,45 @@ public class CharacterDataFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         layoutView = inflater.inflate(R.layout.fragment_character_data, container, false);
+        name = (TextView)layoutView.findViewById(R.id.char_name);
+        gender = (TextView)layoutView.findViewById(R.id.char_gender);
+        height= (TextView)layoutView.findViewById(R.id.char_height);
+        mass = (TextView)layoutView.findViewById(R.id.char_mass);
+        birthYear = (TextView)layoutView.findViewById(R.id.char_birthdate);
+        eyeColor = (TextView)layoutView.findViewById(R.id.char_eyecolor);
+        hairColor = (TextView)layoutView.findViewById(R.id.char_haircolor);
+        skinColor = (TextView)layoutView.findViewById(R.id.char_skincolor);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             characterData = bundle.getParcelable("CharacterData");
         }
-
+        if(characterData != null){
+            if(characterData.getName() != null){
+                name.setText(characterData.getName());
+            }
+            if(characterData.getGender() != null){
+                gender.setText(characterData.getGender());
+            }
+            if(characterData.getHeight() != null){
+                height.setText(characterData.getHeight() + "cm");
+            }
+            if(characterData.getMass() != null){
+                mass.setText(characterData.getMass() + "kg");
+            }
+            if(characterData.getBirthYear() != null){
+                birthYear.setText(characterData.getBirthYear());
+            }
+            if(characterData.getEyeColor() != null){
+                eyeColor.setText(characterData.getEyeColor());
+            }
+            if(characterData.getHairColor() != null){
+                hairColor.setText(characterData.getHairColor());
+            }
+            if(characterData.getSkinColor() != null){
+                skinColor.setText(characterData.getSkinColor());
+            }
+        }
         return layoutView;
     }
 
