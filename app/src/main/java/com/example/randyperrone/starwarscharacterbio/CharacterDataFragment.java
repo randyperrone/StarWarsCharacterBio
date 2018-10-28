@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.randyperrone.starwarscharacterbio.Model.CharacterData;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +21,7 @@ import android.view.ViewGroup;
  */
 public class CharacterDataFragment extends Fragment {
     private View layoutView;
+    private CharacterData characterData;
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -59,7 +62,10 @@ public class CharacterDataFragment extends Fragment {
         // Inflate the layout for this fragment
         layoutView = inflater.inflate(R.layout.fragment_character_data, container, false);
 
-        //TODO add code here
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            characterData = bundle.getParcelable("CharacterData");
+        }
 
         return layoutView;
     }

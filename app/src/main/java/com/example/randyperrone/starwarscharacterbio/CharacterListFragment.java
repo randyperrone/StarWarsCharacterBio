@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.randyperrone.starwarscharacterbio.Model.CharacterData;
 import com.example.randyperrone.starwarscharacterbio.Model.CharacterDataService;
@@ -18,6 +19,7 @@ import com.example.randyperrone.starwarscharacterbio.RecyclerView.CharacterListA
 import com.example.randyperrone.starwarscharacterbio.RecyclerView.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -38,7 +40,7 @@ public class CharacterListFragment extends Fragment {
     private CharacterDataService downloadCharacterDataService;
     private EndlessRecyclerViewScrollListener scrollListener;
     private GridLayoutManager gridLayoutManager;
-    private Handler handler;
+    private Button sortingButton;
 
     private final String BASE_URL = "https://swapi.co/api/people/?page=";
 
@@ -82,7 +84,7 @@ public class CharacterListFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Initialization
         layoutView = inflater.inflate(R.layout.fragment_character_list, container, false);
-        handler = new Handler();
+        sortingButton = (Button)layoutView.findViewById(R.id.sort_characters_button);
         characterDataList = new ArrayList<>();
         recyclerView = (RecyclerView)layoutView.findViewById(R.id.character_list_recyclerview);
         mAdapter = new CharacterListAdapter(characterDataList);
@@ -110,6 +112,20 @@ public class CharacterListFragment extends Fragment {
                 });
             }
         };
+
+        sortingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(characterDataList.get(0).getName().compareToIgnoreCase(characterDataList.get(characterDataList.size()-1).getName()) > 0){
+                    Collections.sort(characterDataList, CharacterData.CharacterNameComparatorAscending);
+                    mAdapter.notifyDataSetChanged();
+                }
+                else{
+                    Collections.sort(characterDataList, CharacterData.CharacterNameComparatorDescending);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
         recyclerView.addOnScrollListener(scrollListener);
         return layoutView;

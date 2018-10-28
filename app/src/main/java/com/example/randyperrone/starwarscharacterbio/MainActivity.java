@@ -1,12 +1,10 @@
 package com.example.randyperrone.starwarscharacterbio;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements CharacterListFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements CharacterListFragment.OnFragmentInteractionListener, CharacterDataFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

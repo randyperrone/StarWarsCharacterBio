@@ -1,8 +1,11 @@
 package com.example.randyperrone.starwarscharacterbio.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Comparator;
 
-public class CharacterData {
+public class CharacterData implements Parcelable{
     private String name;
     private String gender;
     private String height;
@@ -106,4 +109,45 @@ public class CharacterData {
             return charName2.compareTo(charName1);
         }
     };
+
+    private CharacterData(Parcel in){
+        this.name = in.readString();
+        this.gender = in.readString();
+        this.height = in.readString();
+        this.mass = in.readString();
+        this.birthYear = in.readString();
+        this.eyeColor = in.readString();
+        this.hairColor = in.readString();
+        this.skinColor = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(gender);
+        parcel.writeString(height);
+        parcel.writeString(mass);
+        parcel.writeString(birthYear);
+        parcel.writeString(eyeColor);
+        parcel.writeString(hairColor);
+        parcel.writeString(skinColor);
+    }
+
+    public static final Parcelable.Creator<CharacterData> CREATOR = new Parcelable.Creator<CharacterData>(){
+
+        @Override
+        public CharacterData createFromParcel(Parcel parcel) {
+            return new CharacterData(parcel);
+        }
+
+        @Override
+        public CharacterData[] newArray(int i) {
+            return new CharacterData[i];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 }

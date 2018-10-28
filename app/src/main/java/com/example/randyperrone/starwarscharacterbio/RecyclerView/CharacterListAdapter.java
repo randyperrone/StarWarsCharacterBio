@@ -1,11 +1,14 @@
 package com.example.randyperrone.starwarscharacterbio.RecyclerView;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.randyperrone.starwarscharacterbio.CharacterDataFragment;
+import com.example.randyperrone.starwarscharacterbio.MainActivity;
 import com.example.randyperrone.starwarscharacterbio.Model.CharacterData;
 import com.example.randyperrone.starwarscharacterbio.R;
 
@@ -27,7 +30,7 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListView
 
     @Override
     public void onBindViewHolder(@NonNull CharacterListViewHolder holder, int position) {
-        CharacterData characterData = characterDataList.get(position);
+        final CharacterData characterData = characterDataList.get(position);
         String characterName = "";
         if(characterData != null){
             characterName = characterData.getName();
@@ -39,7 +42,13 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO go to next fragment
+                CharacterDataFragment dataFragment = new CharacterDataFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("CharacterData", characterData);
+                dataFragment.setArguments(bundle);
+                ((MainActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, dataFragment)
+                        .commit();
             }
         });
     }
