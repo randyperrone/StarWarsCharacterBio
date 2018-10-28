@@ -76,7 +76,14 @@ public class CharacterListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        loadInitialData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(characterDataList.isEmpty() || characterDataList == null){
+            loadInitialData();
+        }
     }
 
     @Override
@@ -116,13 +123,15 @@ public class CharacterListFragment extends Fragment {
         sortingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(characterDataList.get(0).getName().compareToIgnoreCase(characterDataList.get(characterDataList.size()-1).getName()) > 0){
-                    Collections.sort(characterDataList, CharacterData.CharacterNameComparatorAscending);
-                    mAdapter.notifyDataSetChanged();
-                }
-                else{
-                    Collections.sort(characterDataList, CharacterData.CharacterNameComparatorDescending);
-                    mAdapter.notifyDataSetChanged();
+                if(characterDataList != null && !characterDataList.isEmpty()){
+                    if(characterDataList.get(0).getName().compareToIgnoreCase(characterDataList.get(characterDataList.size()-1).getName()) > 0){
+                        Collections.sort(characterDataList, CharacterData.CharacterNameComparatorAscending);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    else{
+                        Collections.sort(characterDataList, CharacterData.CharacterNameComparatorDescending);
+                        mAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         });

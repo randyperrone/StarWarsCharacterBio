@@ -48,6 +48,7 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListView
                 dataFragment.setArguments(bundle);
                 ((MainActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, dataFragment)
+                        .addToBackStack(null)
                         .commit();
             }
         });
