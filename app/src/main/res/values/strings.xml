@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">StarWarsCharacterBio</string>
+    <string name="sort_button">Sort by Name</string>
+
 </resources>
