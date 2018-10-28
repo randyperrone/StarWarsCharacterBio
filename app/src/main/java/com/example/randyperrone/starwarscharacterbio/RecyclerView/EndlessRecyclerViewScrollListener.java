@@ -1,10 +1,10 @@
-package com.example.randyperrone.starwarscharacterbio;
+package com.example.randyperrone.starwarscharacterbio.RecyclerView;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener{
-    private int visibleThreshold = 5;
+    private int visibleThreshold = 4;
     private int currentPage = 1;
     private int previousTotalItemCount = 0;
     private boolean loading = true;

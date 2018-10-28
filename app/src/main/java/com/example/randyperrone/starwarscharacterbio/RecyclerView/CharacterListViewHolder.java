@@ -1,8 +1,10 @@
-package com.example.randyperrone.starwarscharacterbio;
+package com.example.randyperrone.starwarscharacterbio.RecyclerView;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.randyperrone.starwarscharacterbio.R;
 
 public class CharacterListViewHolder extends RecyclerView.ViewHolder{
     private TextView characterNameTV;

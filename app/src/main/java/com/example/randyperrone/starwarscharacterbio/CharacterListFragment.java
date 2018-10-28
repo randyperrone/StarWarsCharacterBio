@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.example.randyperrone.starwarscharacterbio.Model.CharacterData;
 import com.example.randyperrone.starwarscharacterbio.Model.CharacterDataService;
+import com.example.randyperrone.starwarscharacterbio.RecyclerView.CharacterListAdapter;
+import com.example.randyperrone.starwarscharacterbio.RecyclerView.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,8 @@ public class CharacterListFragment extends Fragment {
     private CharacterListAdapter mAdapter;
     private CharacterDataService downloadCharacterDataService;
     private EndlessRecyclerViewScrollListener scrollListener;
-    GridLayoutManager gridLayoutManager;
+    private GridLayoutManager gridLayoutManager;
+    private Handler handler;
 
     private final String BASE_URL = "https://swapi.co/api/people/?page=";
 
@@ -71,15 +74,15 @@ public class CharacterListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        loadData();
+        loadInitialData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        //Initialization
         layoutView = inflater.inflate(R.layout.fragment_character_list, container, false);
-
+        handler = new Handler();
         characterDataList = new ArrayList<>();
         recyclerView = (RecyclerView)layoutView.findViewById(R.id.character_list_recyclerview);
         mAdapter = new CharacterListAdapter(characterDataList);
@@ -88,6 +91,7 @@ public class CharacterListFragment extends Fragment {
         gridLayoutManager = new GridLayoutManager(getActivity(), gridColumnCount);
         recyclerView.setLayoutManager(gridLayoutManager);
 
+        //Endless Scrolling
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -107,20 +111,21 @@ public class CharacterListFragment extends Fragment {
             }
         };
 
-
+        recyclerView.addOnScrollListener(scrollListener);
         return layoutView;
     }
 
-    private void loadData(){
+    private void loadInitialData(){
         downloadCharacterDataService = new CharacterDataService(getActivity().getApplicationContext());
         String URL = buildURL("1");
         downloadCharacterDataService.downloadCharacterData(URL, new CharacterDataService.VolleyCallBack() {
             @Override
-            public void onSuccess(List<CharacterData> characterList, Boolean flagForLastAPIPage) {
+            public void onSuccess(final List<CharacterData> characterList, Boolean flagForLastAPIPage) {
                 Log.i(TAG, "downloadData onSuccess");
                 characterDataList.addAll(characterList);
                 final int curSize = mAdapter.getItemCount();
                 mAdapter.notifyItemRangeInserted(curSize, characterDataList.size() - 1);
+
             }
         });
     }
